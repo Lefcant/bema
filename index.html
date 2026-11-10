@@ -9,7 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231D4E89'/%3E%3Ctext x='32' y='47' font-size='42' text-anchor='middle' fill='%23fff' font-family='serif'%3E%CE%B2%3C/text%3E%3C/svg%3E">
 <title>Bema Studio</title>
 <!--
-  Bema Studio 1.1 (2026-10-11): a recording booth for the Ancient Greek TTS corpus.
+  Bema Studio 1.2 (2026-11-10): a recording booth for the Ancient Greek TTS corpus.
   One file. On a computer, open it in Chrome or Edge. On a phone it has to be opened from an https:// address
   (a phone gives no microphone to a downloaded file): see Guide, "On a phone".
   It makes no network requests; audio stays on the device.
@@ -104,6 +104,7 @@ kbd { font: 600 .72rem/1 var(--f-mono); padding: .18rem .34rem; border: 1px soli
 .shell { display: grid; grid-template-columns: 15rem minmax(0, 1fr); align-items: start; }
 .side { position: sticky; top: var(--top-h, 3.1rem); align-self: start; padding: 1.1rem .75rem 1.5rem 1.25rem; max-height: calc(100vh - var(--top-h, 3.1rem)); overflow: auto; }
 .side-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+.side-acts { display: inline-flex; gap: .3rem; }
 .plist { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
 .pitem { display: grid; gap: .22rem; width: 100%; text-align: left; padding: .5rem .6rem; border: 1px solid transparent; border-radius: var(--r); background: transparent; cursor: pointer; }
 @media (hover: hover) { .pitem:hover { background: var(--sunken); } }
@@ -432,7 +433,7 @@ html.touch, .touch body { overscroll-behavior-y: contain; }                     
 
 <div class="shell" id="shell" hidden>
   <aside class="side">
-    <div class="side-head"><span class="label">Passages</span><button class="btn btn-sm" id="addPassage" type="button">New passage</button></div>
+    <div class="side-head"><span class="label">Passages</span><span class="side-acts"><button class="btn btn-sm btn-quiet" id="importBtn" type="button" title="Load many passages from one text file">Import</button><button class="btn btn-sm" id="addPassage" type="button">New passage</button></span><input type="file" id="importFile" accept=".txt,text/plain" hidden></div>
     <ul class="plist" id="plist"></ul>
   </aside>
 
@@ -608,7 +609,7 @@ html.touch, .touch body { overscroll-behavior-y: contain; }                     
 <dialog id="dlg"></dialog>
 <div id="toast" hidden role="status" aria-live="polite"></div>
 
-<script>window.BEMA_VERSION = "1.1 (2026-10-11)"; window.BEMA_SAMPLE = {"title": "Aristotle, Politics 1.1", "id": "aristotle_politics_1_1", "text": "\u1f10\u03c0\u03b5\u03b9\u03b4\u1f74 \u03c0\u1fb6\u03c3\u03b1\u03bd \u03c0\u03cc\u03bb\u03b9\u03bd \u1f41\u03c1\u1ff6\u03bc\u03b5\u03bd \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1\u03bd \u03c4\u03b9\u03bd\u1f70 \u03bf\u1f56\u03c3\u03b1\u03bd \u03ba\u03b1\u1f76 \u03c0\u1fb6\u03c3\u03b1\u03bd \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1\u03bd \u1f00\u03b3\u03b1\u03b8\u03bf\u1fe6 \u03c4\u03b9\u03bd\u03bf\u03c2 \u1f15\u03bd\u03b5\u03ba\u03b5\u03bd \u03c3\u03c5\u03bd\u03b5\u03c3\u03c4\u03b7\u03ba\u03c5\u1fd6\u03b1\u03bd (\u03c4\u03bf\u1fe6 \u03b3\u1f70\u03c1 \u03b5\u1f36\u03bd\u03b1\u03b9 \u03b4\u03bf\u03ba\u03bf\u1fe6\u03bd\u03c4\u03bf\u03c2 \u1f00\u03b3\u03b1\u03b8\u03bf\u1fe6 \u03c7\u03ac\u03c1\u03b9\u03bd \u03c0\u03ac\u03bd\u03c4\u03b1 \u03c0\u03c1\u03ac\u03c4\u03c4\u03bf\u03c5\u03c3\u03b9 \u03c0\u03ac\u03bd\u03c4\u03b5\u03c2), \u03b4\u1fc6\u03bb\u03bf\u03bd \u1f61\u03c2 \u03c0\u1fb6\u03c3\u03b1\u03b9 \u03bc\u1f72\u03bd \u1f00\u03b3\u03b1\u03b8\u03bf\u1fe6 \u03c4\u03b9\u03bd\u03bf\u03c2 \u03c3\u03c4\u03bf\u03c7\u03ac\u03b6\u03bf\u03bd\u03c4\u03b1\u03b9, \u03bc\u03ac\u03bb\u03b9\u03c3\u03c4\u03b1 \u03b4\u1f72 \u03ba\u03b1\u1f76 \u03c4\u03bf\u1fe6 \u03ba\u03c5\u03c1\u03b9\u03c9\u03c4\u03ac\u03c4\u03bf\u03c5 \u03c0\u03ac\u03bd\u03c4\u03c9\u03bd \u1f21 \u03c0\u03b1\u03c3\u1ff6\u03bd \u03ba\u03c5\u03c1\u03b9\u03c9\u03c4\u03ac\u03c4\u03b7 \u03ba\u03b1\u1f76 \u03c0\u03ac\u03c3\u03b1\u03c2 \u03c0\u03b5\u03c1\u03b9\u03ad\u03c7\u03bf\u03c5\u03c3\u03b1 \u03c4\u1f70\u03c2 \u1f04\u03bb\u03bb\u03b1\u03c2. \u03b1\u1f55\u03c4\u03b7 \u03b4\u02bc \u1f10\u03c3\u03c4\u1f76\u03bd \u1f21 \u03ba\u03b1\u03bb\u03bf\u03c5\u03bc\u03ad\u03bd\u03b7 \u03c0\u03cc\u03bb\u03b9\u03c2 \u03ba\u03b1\u1f76 \u1f21 \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1 \u1f21 \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03ae. \u1f45\u03c3\u03bf\u03b9 \u03bc\u1f72\u03bd \u03bf\u1f56\u03bd \u03bf\u1f34\u03bf\u03bd\u03c4\u03b1\u03b9 \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u1f78\u03bd \u03ba\u03b1\u1f76 \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u1f78\u03bd \u03ba\u03b1\u1f76 \u03bf\u1f30\u03ba\u03bf\u03bd\u03bf\u03bc\u03b9\u03ba\u1f78\u03bd \u03ba\u03b1\u1f76 \u03b4\u03b5\u03c3\u03c0\u03bf\u03c4\u03b9\u03ba\u1f78\u03bd \u03b5\u1f36\u03bd\u03b1\u03b9 \u03c4\u1f78\u03bd \u03b1\u1f50\u03c4\u1f78\u03bd \u03bf\u1f50 \u03ba\u03b1\u03bb\u1ff6\u03c2 \u03bb\u03ad\u03b3\u03bf\u03c5\u03c3\u03b9\u03bd (\u03c0\u03bb\u03ae\u03b8\u03b5\u03b9 \u03b3\u1f70\u03c1 \u03ba\u03b1\u1f76 \u1f40\u03bb\u03b9\u03b3\u03cc\u03c4\u03b7\u03c4\u03b9 \u03bd\u03bf\u03bc\u03af\u03b6\u03bf\u03c5\u03c3\u03b9 \u03b4\u03b9\u03b1\u03c6\u03ad\u03c1\u03b5\u03b9\u03bd \u1f00\u03bb\u03bb\u02bc \u03bf\u1f50\u03ba \u03b5\u1f34\u03b4\u03b5\u03b9 \u03c4\u03bf\u03cd\u03c4\u03c9\u03bd \u1f15\u03ba\u03b1\u03c3\u03c4\u03bf\u03bd, \u03bf\u1f37\u03bf\u03bd \u1f02\u03bd \u03bc\u1f72\u03bd \u1f40\u03bb\u03af\u03b3\u03c9\u03bd, \u03b4\u03b5\u03c3\u03c0\u03cc\u03c4\u03b7\u03bd, \u1f02\u03bd \u03b4\u1f72 \u03c0\u03bb\u03b5\u03b9\u03cc\u03bd\u03c9\u03bd, \u03bf\u1f30\u03ba\u03bf\u03bd\u03cc\u03bc\u03bf\u03bd, \u1f02\u03bd \u03b4\u02bc \u1f14\u03c4\u03b9 \u03c0\u03bb\u03b5\u03b9\u03cc\u03bd\u03c9\u03bd, \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u1f78\u03bd \u1f22 \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03cc\u03bd, \u1f61\u03c2 \u03bf\u1f50\u03b4\u1f72\u03bd \u03b4\u03b9\u03b1\u03c6\u03ad\u03c1\u03bf\u03c5\u03c3\u03b1\u03bd \u03bc\u03b5\u03b3\u03ac\u03bb\u03b7\u03bd \u03bf\u1f30\u03ba\u03af\u03b1\u03bd \u1f22 \u03bc\u03b9\u03ba\u03c1\u1f70\u03bd \u03c0\u03cc\u03bb\u03b9\u03bd\u00b7 \u03ba\u03b1\u1f76 \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u1f78\u03bd \u03b4\u1f72 \u03ba\u03b1\u1f76 \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03cc\u03bd, \u1f45\u03c4\u03b1\u03bd \u03bc\u1f72\u03bd \u03b1\u1f50\u03c4\u1f78\u03c2 \u1f10\u03c6\u03b5\u03c3\u03c4\u03ae\u03ba\u1fc3, \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03cc\u03bd, \u1f45\u03c4\u03b1\u03bd \u03b4\u1f72 \u03ba\u03b1\u03c4\u1f70 \u03c4\u03bf\u1f7a\u03c2 \u03bb\u03cc\u03b3\u03bf\u03c5\u03c2 \u03c4\u1fc6\u03c2 \u1f10\u03c0\u03b9\u03c3\u03c4\u03ae\u03bc\u03b7\u03c2 \u03c4\u1fc6\u03c2 \u03c4\u03bf\u03b9\u03b1\u03cd\u03c4\u03b7\u03c2 \u03ba\u03b1\u03c4\u1f70 \u03bc\u03ad\u03c1\u03bf\u03c2 \u1f04\u03c1\u03c7\u03c9\u03bd \u03ba\u03b1\u1f76 \u1f00\u03c1\u03c7\u03cc\u03bc\u03b5\u03bd\u03bf\u03c2, \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03cc\u03bd\u00b7 \u03c4\u03b1\u1fe6\u03c4\u03b1 \u03b4\u02bc \u03bf\u1f50\u03ba \u1f14\u03c3\u03c4\u03b9\u03bd \u1f00\u03bb\u03b7\u03b8\u1fc6)\u00b7 \u03b4\u1fc6\u03bb\u03bf\u03bd \u03b4\u02bc \u1f14\u03c3\u03c4\u03b1\u03b9 \u03c4\u1f78 \u03bb\u03b5\u03b3\u03cc\u03bc\u03b5\u03bd\u03bf\u03bd \u1f10\u03c0\u03b9\u03c3\u03ba\u03bf\u03c0\u03bf\u1fe6\u03c3\u03b9 \u03ba\u03b1\u03c4\u1f70 \u03c4\u1f74\u03bd \u1f51\u03c6\u03b7\u03b3\u03b7\u03bc\u03ad\u03bd\u03b7\u03bd \u03bc\u03ad\u03b8\u03bf\u03b4\u03bf\u03bd. \u1f65\u03c3\u03c0\u03b5\u03c1 \u03b3\u1f70\u03c1 \u1f10\u03bd \u03c4\u03bf\u1fd6\u03c2 \u1f04\u03bb\u03bb\u03bf\u03b9\u03c2 \u03c4\u1f78 \u03c3\u03cd\u03bd\u03b8\u03b5\u03c4\u03bf\u03bd \u03bc\u03ad\u03c7\u03c1\u03b9 \u03c4\u1ff6\u03bd \u1f00\u03c3\u03c5\u03bd\u03b8\u03ad\u03c4\u03c9\u03bd \u1f00\u03bd\u03ac\u03b3\u03ba\u03b7 \u03b4\u03b9\u03b1\u03b9\u03c1\u03b5\u1fd6\u03bd (\u03c4\u03b1\u1fe6\u03c4\u03b1 \u03b3\u1f70\u03c1 \u1f10\u03bb\u03ac\u03c7\u03b9\u03c3\u03c4\u03b1 \u03bc\u03cc\u03c1\u03b9\u03b1 \u03c4\u03bf\u1fe6 \u03c0\u03b1\u03bd\u03c4\u03cc\u03c2), \u03bf\u1f55\u03c4\u03c9 \u03ba\u03b1\u1f76 \u03c0\u03cc\u03bb\u03b9\u03bd \u1f10\u03be \u1f67\u03bd \u03c3\u03cd\u03b3\u03ba\u03b5\u03b9\u03c4\u03b1\u03b9 \u03c3\u03ba\u03bf\u03c0\u03bf\u1fe6\u03bd\u03c4\u03b5\u03c2 \u1f40\u03c8\u03cc\u03bc\u03b5\u03b8\u03b1 \u03ba\u03b1\u1f76 \u03c0\u03b5\u03c1\u1f76 \u03c4\u03bf\u03cd\u03c4\u03c9\u03bd \u03bc\u1fb6\u03bb\u03bb\u03bf\u03bd, \u03c4\u03af \u03c4\u03b5 \u03b4\u03b9\u03b1\u03c6\u03ad\u03c1\u03bf\u03c5\u03c3\u03b9\u03bd \u1f00\u03bb\u03bb\u03ae\u03bb\u03c9\u03bd \u03ba\u03b1\u1f76 \u03b5\u1f34 \u03c4\u03b9 \u03c4\u03b5\u03c7\u03bd\u03b9\u03ba\u1f78\u03bd \u1f10\u03bd\u03b4\u03ad\u03c7\u03b5\u03c4\u03b1\u03b9 \u03bb\u03b1\u03b2\u03b5\u1fd6\u03bd \u03c0\u03b5\u03c1\u1f76 \u1f15\u03ba\u03b1\u03c3\u03c4\u03bf\u03bd \u03c4\u1ff6\u03bd \u1fe5\u03b7\u03b8\u03ad\u03bd\u03c4\u03c9\u03bd."};</script>
+<script>window.BEMA_VERSION = "1.2 (2026-11-10)"; window.BEMA_SAMPLE = {"title": "Aristotle, Politics 1.1", "id": "aristotle_politics_1_1", "text": "\u1f10\u03c0\u03b5\u03b9\u03b4\u1f74 \u03c0\u1fb6\u03c3\u03b1\u03bd \u03c0\u03cc\u03bb\u03b9\u03bd \u1f41\u03c1\u1ff6\u03bc\u03b5\u03bd \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1\u03bd \u03c4\u03b9\u03bd\u1f70 \u03bf\u1f56\u03c3\u03b1\u03bd \u03ba\u03b1\u1f76 \u03c0\u1fb6\u03c3\u03b1\u03bd \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1\u03bd \u1f00\u03b3\u03b1\u03b8\u03bf\u1fe6 \u03c4\u03b9\u03bd\u03bf\u03c2 \u1f15\u03bd\u03b5\u03ba\u03b5\u03bd \u03c3\u03c5\u03bd\u03b5\u03c3\u03c4\u03b7\u03ba\u03c5\u1fd6\u03b1\u03bd (\u03c4\u03bf\u1fe6 \u03b3\u1f70\u03c1 \u03b5\u1f36\u03bd\u03b1\u03b9 \u03b4\u03bf\u03ba\u03bf\u1fe6\u03bd\u03c4\u03bf\u03c2 \u1f00\u03b3\u03b1\u03b8\u03bf\u1fe6 \u03c7\u03ac\u03c1\u03b9\u03bd \u03c0\u03ac\u03bd\u03c4\u03b1 \u03c0\u03c1\u03ac\u03c4\u03c4\u03bf\u03c5\u03c3\u03b9 \u03c0\u03ac\u03bd\u03c4\u03b5\u03c2), \u03b4\u1fc6\u03bb\u03bf\u03bd \u1f61\u03c2 \u03c0\u1fb6\u03c3\u03b1\u03b9 \u03bc\u1f72\u03bd \u1f00\u03b3\u03b1\u03b8\u03bf\u1fe6 \u03c4\u03b9\u03bd\u03bf\u03c2 \u03c3\u03c4\u03bf\u03c7\u03ac\u03b6\u03bf\u03bd\u03c4\u03b1\u03b9, \u03bc\u03ac\u03bb\u03b9\u03c3\u03c4\u03b1 \u03b4\u1f72 \u03ba\u03b1\u1f76 \u03c4\u03bf\u1fe6 \u03ba\u03c5\u03c1\u03b9\u03c9\u03c4\u03ac\u03c4\u03bf\u03c5 \u03c0\u03ac\u03bd\u03c4\u03c9\u03bd \u1f21 \u03c0\u03b1\u03c3\u1ff6\u03bd \u03ba\u03c5\u03c1\u03b9\u03c9\u03c4\u03ac\u03c4\u03b7 \u03ba\u03b1\u1f76 \u03c0\u03ac\u03c3\u03b1\u03c2 \u03c0\u03b5\u03c1\u03b9\u03ad\u03c7\u03bf\u03c5\u03c3\u03b1 \u03c4\u1f70\u03c2 \u1f04\u03bb\u03bb\u03b1\u03c2. \u03b1\u1f55\u03c4\u03b7 \u03b4\u02bc \u1f10\u03c3\u03c4\u1f76\u03bd \u1f21 \u03ba\u03b1\u03bb\u03bf\u03c5\u03bc\u03ad\u03bd\u03b7 \u03c0\u03cc\u03bb\u03b9\u03c2 \u03ba\u03b1\u1f76 \u1f21 \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1 \u1f21 \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03ae. \u1f45\u03c3\u03bf\u03b9 \u03bc\u1f72\u03bd \u03bf\u1f56\u03bd \u03bf\u1f34\u03bf\u03bd\u03c4\u03b1\u03b9 \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u1f78\u03bd \u03ba\u03b1\u1f76 \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u1f78\u03bd \u03ba\u03b1\u1f76 \u03bf\u1f30\u03ba\u03bf\u03bd\u03bf\u03bc\u03b9\u03ba\u1f78\u03bd \u03ba\u03b1\u1f76 \u03b4\u03b5\u03c3\u03c0\u03bf\u03c4\u03b9\u03ba\u1f78\u03bd \u03b5\u1f36\u03bd\u03b1\u03b9 \u03c4\u1f78\u03bd \u03b1\u1f50\u03c4\u1f78\u03bd \u03bf\u1f50 \u03ba\u03b1\u03bb\u1ff6\u03c2 \u03bb\u03ad\u03b3\u03bf\u03c5\u03c3\u03b9\u03bd (\u03c0\u03bb\u03ae\u03b8\u03b5\u03b9 \u03b3\u1f70\u03c1 \u03ba\u03b1\u1f76 \u1f40\u03bb\u03b9\u03b3\u03cc\u03c4\u03b7\u03c4\u03b9 \u03bd\u03bf\u03bc\u03af\u03b6\u03bf\u03c5\u03c3\u03b9 \u03b4\u03b9\u03b1\u03c6\u03ad\u03c1\u03b5\u03b9\u03bd \u1f00\u03bb\u03bb\u02bc \u03bf\u1f50\u03ba \u03b5\u1f34\u03b4\u03b5\u03b9 \u03c4\u03bf\u03cd\u03c4\u03c9\u03bd \u1f15\u03ba\u03b1\u03c3\u03c4\u03bf\u03bd, \u03bf\u1f37\u03bf\u03bd \u1f02\u03bd \u03bc\u1f72\u03bd \u1f40\u03bb\u03af\u03b3\u03c9\u03bd, \u03b4\u03b5\u03c3\u03c0\u03cc\u03c4\u03b7\u03bd, \u1f02\u03bd \u03b4\u1f72 \u03c0\u03bb\u03b5\u03b9\u03cc\u03bd\u03c9\u03bd, \u03bf\u1f30\u03ba\u03bf\u03bd\u03cc\u03bc\u03bf\u03bd, \u1f02\u03bd \u03b4\u02bc \u1f14\u03c4\u03b9 \u03c0\u03bb\u03b5\u03b9\u03cc\u03bd\u03c9\u03bd, \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u1f78\u03bd \u1f22 \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03cc\u03bd, \u1f61\u03c2 \u03bf\u1f50\u03b4\u1f72\u03bd \u03b4\u03b9\u03b1\u03c6\u03ad\u03c1\u03bf\u03c5\u03c3\u03b1\u03bd \u03bc\u03b5\u03b3\u03ac\u03bb\u03b7\u03bd \u03bf\u1f30\u03ba\u03af\u03b1\u03bd \u1f22 \u03bc\u03b9\u03ba\u03c1\u1f70\u03bd \u03c0\u03cc\u03bb\u03b9\u03bd\u00b7 \u03ba\u03b1\u1f76 \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u1f78\u03bd \u03b4\u1f72 \u03ba\u03b1\u1f76 \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03cc\u03bd, \u1f45\u03c4\u03b1\u03bd \u03bc\u1f72\u03bd \u03b1\u1f50\u03c4\u1f78\u03c2 \u1f10\u03c6\u03b5\u03c3\u03c4\u03ae\u03ba\u1fc3, \u03b2\u03b1\u03c3\u03b9\u03bb\u03b9\u03ba\u03cc\u03bd, \u1f45\u03c4\u03b1\u03bd \u03b4\u1f72 \u03ba\u03b1\u03c4\u1f70 \u03c4\u03bf\u1f7a\u03c2 \u03bb\u03cc\u03b3\u03bf\u03c5\u03c2 \u03c4\u1fc6\u03c2 \u1f10\u03c0\u03b9\u03c3\u03c4\u03ae\u03bc\u03b7\u03c2 \u03c4\u1fc6\u03c2 \u03c4\u03bf\u03b9\u03b1\u03cd\u03c4\u03b7\u03c2 \u03ba\u03b1\u03c4\u1f70 \u03bc\u03ad\u03c1\u03bf\u03c2 \u1f04\u03c1\u03c7\u03c9\u03bd \u03ba\u03b1\u1f76 \u1f00\u03c1\u03c7\u03cc\u03bc\u03b5\u03bd\u03bf\u03c2, \u03c0\u03bf\u03bb\u03b9\u03c4\u03b9\u03ba\u03cc\u03bd\u00b7 \u03c4\u03b1\u1fe6\u03c4\u03b1 \u03b4\u02bc \u03bf\u1f50\u03ba \u1f14\u03c3\u03c4\u03b9\u03bd \u1f00\u03bb\u03b7\u03b8\u1fc6)\u00b7 \u03b4\u1fc6\u03bb\u03bf\u03bd \u03b4\u02bc \u1f14\u03c3\u03c4\u03b1\u03b9 \u03c4\u1f78 \u03bb\u03b5\u03b3\u03cc\u03bc\u03b5\u03bd\u03bf\u03bd \u1f10\u03c0\u03b9\u03c3\u03ba\u03bf\u03c0\u03bf\u1fe6\u03c3\u03b9 \u03ba\u03b1\u03c4\u1f70 \u03c4\u1f74\u03bd \u1f51\u03c6\u03b7\u03b3\u03b7\u03bc\u03ad\u03bd\u03b7\u03bd \u03bc\u03ad\u03b8\u03bf\u03b4\u03bf\u03bd. \u1f65\u03c3\u03c0\u03b5\u03c1 \u03b3\u1f70\u03c1 \u1f10\u03bd \u03c4\u03bf\u1fd6\u03c2 \u1f04\u03bb\u03bb\u03bf\u03b9\u03c2 \u03c4\u1f78 \u03c3\u03cd\u03bd\u03b8\u03b5\u03c4\u03bf\u03bd \u03bc\u03ad\u03c7\u03c1\u03b9 \u03c4\u1ff6\u03bd \u1f00\u03c3\u03c5\u03bd\u03b8\u03ad\u03c4\u03c9\u03bd \u1f00\u03bd\u03ac\u03b3\u03ba\u03b7 \u03b4\u03b9\u03b1\u03b9\u03c1\u03b5\u1fd6\u03bd (\u03c4\u03b1\u1fe6\u03c4\u03b1 \u03b3\u1f70\u03c1 \u1f10\u03bb\u03ac\u03c7\u03b9\u03c3\u03c4\u03b1 \u03bc\u03cc\u03c1\u03b9\u03b1 \u03c4\u03bf\u1fe6 \u03c0\u03b1\u03bd\u03c4\u03cc\u03c2), \u03bf\u1f55\u03c4\u03c9 \u03ba\u03b1\u1f76 \u03c0\u03cc\u03bb\u03b9\u03bd \u1f10\u03be \u1f67\u03bd \u03c3\u03cd\u03b3\u03ba\u03b5\u03b9\u03c4\u03b1\u03b9 \u03c3\u03ba\u03bf\u03c0\u03bf\u1fe6\u03bd\u03c4\u03b5\u03c2 \u1f40\u03c8\u03cc\u03bc\u03b5\u03b8\u03b1 \u03ba\u03b1\u1f76 \u03c0\u03b5\u03c1\u1f76 \u03c4\u03bf\u03cd\u03c4\u03c9\u03bd \u03bc\u1fb6\u03bb\u03bb\u03bf\u03bd, \u03c4\u03af \u03c4\u03b5 \u03b4\u03b9\u03b1\u03c6\u03ad\u03c1\u03bf\u03c5\u03c3\u03b9\u03bd \u1f00\u03bb\u03bb\u03ae\u03bb\u03c9\u03bd \u03ba\u03b1\u1f76 \u03b5\u1f34 \u03c4\u03b9 \u03c4\u03b5\u03c7\u03bd\u03b9\u03ba\u1f78\u03bd \u1f10\u03bd\u03b4\u03ad\u03c7\u03b5\u03c4\u03b1\u03b9 \u03bb\u03b1\u03b2\u03b5\u1fd6\u03bd \u03c0\u03b5\u03c1\u1f76 \u1f15\u03ba\u03b1\u03c3\u03c4\u03bf\u03bd \u03c4\u1ff6\u03bd \u1fe5\u03b7\u03b8\u03ad\u03bd\u03c4\u03c9\u03bd."};</script>
 <script>
 /* Bema Studio core: text handling, signal analysis, file builders. No DOM in here. */
 (function (root) {
@@ -708,6 +709,11 @@ function partition(secs, maxSec) {
   return groups.reverse();
 }
 
+// Bare forms (no accents, breathings or elision marks), compared after stripMarks.
+const CLAUSE_OPENERS = new Set(['\u03C9\u03C3\u03C0\u03B5\u03C1', '\u03BA\u03B1\u03B8\u03B1\u03C0\u03B5\u03C1', '\u03B5\u03B9\u03C0\u03B5\u03C1', '\u03B5\u03C0\u03B5\u03B9\u03C0\u03B5\u03C1', '\u03B4\u03B9\u03BF\u03C4\u03B9', '\u03BA\u03B1\u03B9', '\u03B7', '\u03B1\u03BB\u03BB\u03B1', '\u03B1\u03BB\u03BB', '\u03C9\u03C3\u03C4\u03B5', '\u03BF\u03C4\u03B9', '\u03C9\u03C2', '\u03B5\u03B9', '\u03B5\u03B1\u03BD', '\u03B1\u03BD', '\u03B9\u03BD\u03B1', '\u03BF\u03C0\u03C9\u03C2', '\u03B5\u03C0\u03B5\u03B9', '\u03B5\u03C0\u03B5\u03B9\u03B4\u03B7', '\u03BF\u03C4\u03B1\u03BD', '\u03BF\u03C4\u03B5', '\u03BF\u03C0\u03BF\u03C4\u03B1\u03BD', '\u03C0\u03C1\u03B9\u03BD', '\u03B5\u03C9\u03C2', '\u03BF\u03C5\u03C4\u03B5', '\u03BC\u03B7\u03C4\u03B5', '\u03BF\u03C5\u03B4\u03B5', '\u03BC\u03B7\u03B4\u03B5', '\u03B5\u03B9\u03C4\u03B5', '\u03BF\u03C2', '\u03B7\u03BD', '\u03BF', '\u03BF\u03C5', '\u03C9', '\u03BF\u03BD', '\u03BF\u03B9', '\u03B1\u03B9', '\u03B1', '\u03C9\u03BD', '\u03BF\u03B9\u03C2', '\u03B1\u03B9\u03C2', '\u03BF\u03C5\u03C2', '\u03B1\u03C2', '\u03BF\u03C3\u03BF\u03C2', '\u03BF\u03C3\u03B1', '\u03BF\u03C3\u03BF\u03BD', '\u03BF\u03B9\u03BF\u03C2', '\u03BF\u03B9\u03BF\u03BD', '\u03BF\u03C3\u03C4\u03B9\u03C2', '\u03B7\u03C4\u03B9\u03C2', '\u03BF\u03C0\u03B5\u03C1', '\u03B7\u03C0\u03B5\u03C1', '\u03BF\u03C5\u03BA', '\u03BF\u03C5\u03C7', '\u03BC\u03B7', '\u03C0\u03B5\u03C1\u03B9', '\u03B4\u03B9\u03B1', '\u03BA\u03B1\u03C4\u03B1', '\u03C0\u03C1\u03BF\u03C2', '\u03B5\u03C0\u03B9', '\u03C5\u03C0\u03BF', '\u03BC\u03B5\u03C4\u03B1', '\u03C0\u03B1\u03C1\u03B1', '\u03B5\u03BA', '\u03B5\u03BE', '\u03B5\u03BD', '\u03B5\u03B9\u03C2', '\u03B1\u03C0\u03BF']);
+const ARTICLES = new Set(['\u03BF', '\u03B7', '\u03C4\u03BF', '\u03C4\u03BF\u03C5', '\u03C4\u03B7\u03C2', '\u03C4\u03C9', '\u03C4\u03B7', '\u03C4\u03BF\u03BD', '\u03C4\u03B7\u03BD', '\u03C4\u03B1', '\u03C4\u03C9\u03BD', '\u03C4\u03BF\u03B9\u03C2', '\u03C4\u03B1\u03B9\u03C2', '\u03C4\u03BF\u03C5\u03C2', '\u03C4\u03B1\u03C2', '\u03BF\u03B9', '\u03B1\u03B9']);
+const POSTPOSITIVES = new Set(['\u03C4\u03B5', '\u03B3\u03B5', '\u03B4\u03B5', '\u03BC\u03B5\u03BD', '\u03B3\u03B1\u03C1', '\u03BF\u03C5\u03BD', '\u03B4\u03B7', '\u03B1\u03BD', '\u03C4\u03B9\u03C2', '\u03C4\u03B9', '\u03C4\u03B9\u03BD\u03B1', '\u03C4\u03B9\u03BD\u03BF\u03C2', '\u03C4\u03B9\u03BD\u03B9', '\u03C4\u03B9\u03BD\u03B5\u03C2', '\u03C4\u03B9\u03BD\u03C9\u03BD', '\u03C0\u03BF\u03C5', '\u03C0\u03C9\u03C2', '\u03C0\u03BF\u03C4\u03B5', '\u03C0\u03C9', '\u03BC\u03BF\u03B9', '\u03BC\u03BF\u03C5', '\u03BC\u03B5', '\u03C3\u03BF\u03B9', '\u03C3\u03BF\u03C5', '\u03C3\u03B5', '\u03C0\u03B5\u03C1', '\u03C4\u03BF\u03B9', '\u03B1\u03C1\u03B1', '\u03B1\u03C5', '\u03BC\u03B7\u03BD', '\u03B5\u03C3\u03C4\u03B9', '\u03B5\u03C3\u03C4\u03B9\u03BD', '\u03B5\u03B9\u03C3\u03B9', '\u03B5\u03B9\u03C3\u03B9\u03BD', '\u03C6\u03B7\u03C3\u03B9', '\u03C6\u03B7\u03C3\u03B9\u03BD']);
+function stripMarks(w) { return w.normalize('NFD').toLowerCase().replace(/[^\u03B1-\u03C9]/g, '').replace(/\u03C2/g, '\u03C3'); }
 function splitLong(words, maxSec, secPerSyll) {
   const atoms = [];
   let cur = [];
@@ -718,6 +724,24 @@ function splitLong(words, maxSec, secPerSyll) {
     if (boundary && next) { atoms.push(cur); cur = []; }
   }
   if (cur.length) atoms.push(cur);
+  // A stretch with no punctuation that is still too long (common in Plato) is cut before a word that opens a
+  // clause or phrase (and, or, but, that, if, when, relatives, negatives), as near its middle as such a word allows.
+  const tooLong = a => estSec(a.join(' '), secPerSyll) > maxSec;
+  for (let guard = 0; guard < 200 && atoms.some(a => tooLong(a) && a.length > 3); guard++) {
+    const k = atoms.findIndex(a => tooLong(a) && a.length > 3), a = atoms[k];
+    const total = estSec(a.join(' '), secPerSyll); let best = -1, bestCost = Infinity, run = 0;
+    for (let i = 1; i < a.length; i++) {
+      run += estSec(a[i - 1], secPerSyll);
+      if (i < 2 || a.length - i < 2) continue;
+      const w = stripMarks(a[i]), before = stripMarks(a[i - 1]);
+      const cost = Math.abs(run - total / 2) / total + (CLAUSE_OPENERS.has(w) ? 0 : 0.3) +
+        (CLAUSE_OPENERS.has(before) || ARTICLES.has(before) ? 1 : 0) +      // never leave "and", "not", a preposition or an article hanging
+        (POSTPOSITIVES.has(w) ? 1 : 0);                                     // nor start with a word that leans on the one before
+      if (cost < bestCost) { bestCost = cost; best = i; }
+    }
+    if (best < 0) break;
+    atoms.splice(k, 1, a.slice(0, best), a.slice(best));
+  }
   if (atoms.length < 2) return [words];
   const secs = atoms.map(a => estSec(a.join(' '), secPerSyll));
   return partition(secs, maxSec).map(([a, b]) => [].concat(...atoms.slice(a, b)));
@@ -2027,6 +2051,43 @@ function addPassage() {
   commit(); window.scrollTo(0, 0); $('#fTitle').focus();
 }
 
+/* Many passages from one text file. A line "## Title | passage_id" starts a passage; other lines starting with "#"
+   are notes; everything else is the passage's text. A file without such headings becomes one passage. */
+function parseImport(text, fileName) {
+  const out = []; let cur = null;
+  for (const ln of String(text).replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n')) {
+    const m = /^##\s*(.*)$/.exec(ln);
+    if (m) { const k = m[1].lastIndexOf('|'); cur = { title: (k < 0 ? m[1] : m[1].slice(0, k)).trim(), id: k < 0 ? '' : m[1].slice(k + 1).trim(), lines: [] }; out.push(cur); continue; }
+    if (/^#/.test(ln)) continue;
+    if (!cur) { if (!ln.trim()) continue; cur = { title: String(fileName || 'Imported text').replace(/\.[^.]*$/, ''), id: '', lines: [] }; out.push(cur); }
+    cur.lines.push(ln);
+  }
+  return out.map(p => ({ title: p.title, id: p.id, raw: p.lines.join('\n').trim() })).filter(p => p.raw);
+}
+async function importPassages(file) {
+  if (!file) return;
+  if (App.rec || App.pending) { toast('Finish the current take first.'); return; }
+  let found;
+  try { found = parseImport(await file.text(), file.name); } catch (e) { showErr('import', 'The file could not be read: ' + (e.message || e)); return; }
+  if (!found.length) { showErr('import', 'No text was found in "' + file.name + '". The file must be plain text (.txt).'); return; }
+  const s = S(), have = new Set(s.passages.map(p => p.id)), have2 = new Set(s.passages.map(p => C.normSpace(p.raw)));
+  let added = 0, skipped = 0, first = null;
+  for (const f of found) {
+    let id = C.validId(f.id) ? f.id : C.slugify(f.id || f.title);
+    if (have.has(id) || have2.has(C.normSpace(f.raw))) { skipped++; continue; }      // importing the same file twice adds nothing
+    const p = newPassage('p' + (++s.pseq));
+    Object.assign(p, { id, idAuto: false, title: f.title || id, raw: f.raw, dirty: true });
+    setPrompts(p, C.splitScript(p.raw, { mode: 'sentence', targetSec: s.settings.targetSec, joinSec: s.settings.joinSec, secPerSyll: pace().secPerSyll }));
+    s.passages.push(p); have.add(id); have2.add(C.normSpace(f.raw)); added++; if (!first) first = p;
+  }
+  if (added) {
+    s.passages = s.passages.filter(p => !(p.example && !hasTakes(p)) && !(!p.raw && !p.title && !p.prompts.length));   // the untouched example and empty drafts make way
+    s.cur.p = first.u; s.cur.i = 0; App.editing = null; App.waveKey = ''; App.view = 'record'; s.cur.v = 'record';
+    clearErr('import'); commit(); window.scrollTo(0, 0);
+  }
+  toast(added ? added + (added === 1 ? ' passage' : ' passages') + ' imported' + (skipped ? ', ' + skipped + ' already here' : '') + '.' : 'Nothing new: all ' + skipped + ' passages are already here.', 5000);
+}
+
 async function deletePassage() {
   if (App.rec || App.busy) return;
   const p = curP(), n = p.prompts.filter(pr => pr.take).length;
@@ -2329,6 +2390,8 @@ function bind() {
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setView(t.dataset.view)));
   $('#plist').addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (b) selectPassage(b.dataset.p); });
   $('#addPassage').addEventListener('click', addPassage);
+  $('#importBtn').addEventListener('click', () => { $('#importFile').value = ''; $('#importFile').click(); });
+  $('#importFile').addEventListener('change', e => importPassages(e.target.files[0]));
   $('#storeBtn').addEventListener('click', openStoreDialog);
   $('#micBtn').addEventListener('click', openMicDialog);
   $('#banner').addEventListener('click', e => {
@@ -2487,7 +2550,7 @@ async function boot() {
   start();
 }
 
-window.__bema = { App, Mic, Wake, ENV, C, openFolder, exportPassage, keep, startRec, stopRec, render, saveNow, FolderStore };
+window.__bema = { parseImport, importPassages, App, Mic, Wake, ENV, C, openFolder, exportPassage, keep, startRec, stopRec, render, saveNow, FolderStore };
 boot();
 })();
 </script>
